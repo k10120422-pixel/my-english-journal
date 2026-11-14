@@ -53,9 +53,44 @@ footer{padding-block:2rem;color:var(--muted);font-size:.88rem}
 [hidden]{display:none!important}
 @media(max-width:420px){.shell{width:calc(100% - 1.4rem)}.brand{font-size:.92rem}.speed{gap:.35rem;font-size:.8rem}.card{padding:.85rem}.section-nav button{padding-inline:.55rem}}
 
-/* Touch-to-pronounce on every English word. Keep native vertical scrolling. */
-.speech-word{display:inline;cursor:pointer;border-radius:.2em;touch-action:pan-y;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;transition:background-color .12s ease}
-.speech-word:hover,.speech-word:focus-visible{background:#eee0f2;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:.18em}
-.speech-word:active{background:#e3cce9}
-.speech-hint{font-size:.9rem;color:var(--muted);background:#f7f0fa;border:1px solid var(--line);border-radius:.7rem;padding:.7rem .85rem;margin:0 0 1rem}
-@media(hover:none){.speech-word:active{background:#e3cce9}}
+/* Clear, individual tap targets for every English word on mobile. */
+button.speech-word{
+  display:inline-block;
+  vertical-align:baseline;
+  width:auto;
+  min-width:0;
+  min-height:0;
+  margin:0 .01em;
+  padding:.04em .13em .05em;
+  line-height:1.5;
+  border:0;
+  border-bottom:2px dotted #87549a;
+  border-radius:.22em;
+  background:#f6eefa;
+  color:inherit;
+  font:inherit;
+  font-weight:inherit;
+  letter-spacing:inherit;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:#dfc4e9;
+  user-select:none;
+  -webkit-user-select:none;
+}
+button.speech-word:hover,
+button.speech-word:focus-visible{
+  background:#e8d7ef;
+  border-bottom-style:solid;
+  border-bottom-color:#5b3665;
+  outline-offset:2px;
+}
+button.speech-word:active{background:#d5b6df;transform:translateY(1px)}
+.speech-hint{
+  font-size:.95rem;
+  color:#493752;
+  background:#f7f0fa;
+  border:1px solid var(--line);
+  border-radius:.7rem;
+  padding:.8rem .9rem;
+  margin:0 0 1rem;
+}
