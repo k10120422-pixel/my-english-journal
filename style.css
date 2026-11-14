@@ -52,3 +52,10 @@ footer{padding-block:2rem;color:var(--muted);font-size:.88rem}
 .audio-status{position:fixed;bottom:1rem;right:1rem;left:1rem;margin-inline:auto;max-width:32rem;background:#382840;color:white;padding:.75rem 1rem;border-radius:.65rem}
 [hidden]{display:none!important}
 @media(max-width:420px){.shell{width:calc(100% - 1.4rem)}.brand{font-size:.92rem}.speed{gap:.35rem;font-size:.8rem}.card{padding:.85rem}.section-nav button{padding-inline:.55rem}}
+
+/* Touch-to-pronounce on every English word. Keep native vertical scrolling. */
+.speech-word{display:inline;cursor:pointer;border-radius:.2em;touch-action:pan-y;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;transition:background-color .12s ease}
+.speech-word:hover,.speech-word:focus-visible{background:#eee0f2;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:.18em}
+.speech-word:active{background:#e3cce9}
+.speech-hint{font-size:.9rem;color:var(--muted);background:#f7f0fa;border:1px solid var(--line);border-radius:.7rem;padding:.7rem .85rem;margin:0 0 1rem}
+@media(hover:none){.speech-word:active{background:#e3cce9}}
