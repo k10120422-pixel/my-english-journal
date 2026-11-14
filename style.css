@@ -94,3 +94,5 @@ button.speech-word:active{background:#d5b6df;transform:translateY(1px)}
   padding:.8rem .9rem;
   margin:0 0 1rem;
 }
+
+.travel-guide{margin:.7rem 0 1rem;padding:.75rem 1rem;border:1px solid #c9d9d3;border-radius:.8rem;background:#f0f7f3;color:#234535;font-size:.95rem;font-weight:600;line-height:1.75}
