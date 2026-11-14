@@ -34,8 +34,8 @@ function button(text, handler, cls) {
   return el;
 }
 
-// Each visible English word is independently pronounceable.
-// Long-press on touch devices (about half a second), tap/click, or press Enter/Space.
+// Every visible English word is a real, clearly styled button: tap once to hear it.
+// Works on mobile without any long-press gesture; keyboards use Enter / Space.
 function english(tag, text) {
   const el = node(tag, '', 'en');
   el.lang = 'en';
@@ -45,63 +45,15 @@ function english(tag, text) {
       el.append(document.createTextNode(part));
       continue;
     }
-    const word = node('span', part, 'speech-word');
+    const word = node('button', part, 'speech-word');
+    word.type = 'button';
     word.lang = 'en';
-    word.setAttribute('role', 'button');
-    word.setAttribute('tabindex', '0');
-    word.setAttribute('aria-label', part + '，朗讀這個單字');
-    let holdTimer = null;
-    let held = false;
-    let moved = false;
-    let startX = 0;
-    let startY = 0;
-    const cancelHold = () => {
-      if (holdTimer !== null) clearTimeout(holdTimer);
-      holdTimer = null;
-    };
-    const sayWord = () => {
+    word.title = '點一下聽 ' + part + ' 的發音';
+    word.setAttribute('aria-label', '點一下朗讀英文單字 ' + part);
+    word.addEventListener('click', (event) => {
+      event.stopPropagation();
       play([part]);
       announce('🔊 單字：' + part);
-    };
-    word.addEventListener('pointerdown', (event) => {
-      if (event.pointerType === 'mouse' && event.button !== 0) return;
-      cancelHold();
-      held = false;
-      moved = false;
-      startX = event.clientX;
-      startY = event.clientY;
-      if (event.pointerType === 'touch' || event.pointerType === 'pen') {
-        holdTimer = setTimeout(() => {
-          held = true;
-          holdTimer = null;
-          sayWord();
-        }, 500);
-      }
-    });
-    word.addEventListener('pointermove', (event) => {
-      if (Math.hypot(event.clientX - startX, event.clientY - startY) > 12) {
-        moved = true;
-        cancelHold();
-      }
-    });
-    word.addEventListener('pointerup', cancelHold);
-    word.addEventListener('pointercancel', () => { moved = true; cancelHold(); });
-    word.addEventListener('pointerleave', cancelHold);
-    word.addEventListener('contextmenu', (event) => event.preventDefault());
-    word.addEventListener('click', (event) => {
-      if (held || moved) {
-        held = false;
-        moved = false;
-        event.preventDefault();
-        return;
-      }
-      sayWord();
-    });
-    word.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        sayWord();
-      }
     });
     el.append(word);
   }
@@ -371,7 +323,7 @@ function renderSection() {
   heading.id = 'section-title';
   heading.tabIndex = -1;
   content.replaceChildren(heading);
-  content.append(node('p', '👆 長按英文單字約半秒可單獨聽發音，也能直接輕點單字。整句請按「▶ 朗讀」；語速可從上方調整。', 'speech-hint'));
+  content.append(node('p', '👆 每個有紫色虛線的英文單字都是按鈕，直接點一下就能聽該字發音；不需要長按。整句請按「▶ 朗讀」；可在上方調整語速。', 'speech-hint'));
   for (const tab of byId('sections').children) tab.setAttribute('aria-current', String(tab.dataset.section === section));
   if (section === 'practice') {
     content.append(practice());
