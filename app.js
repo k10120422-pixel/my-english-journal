@@ -356,6 +356,17 @@ function selectLesson() {
   byId('lesson-title').textContent = lesson.title;
   byId('english-title').textContent = lesson.titleEn;
   byId('tagline').textContent = lesson.tagline;
+  const guide = byId('travel-guide');
+  if (window.travelCourse) {
+    const dayNumber = window.travelCourse.dates.indexOf(lesson.date) + 1;
+    const isTravel = dayNumber > 0;
+    guide.hidden = !isTravel;
+    if (isTravel) {
+      guide.textContent = '✈️ 出國英文 A0／Pre-A1 ・ 第 ' + dayNumber
+        + ' / ' + window.travelCourse.count + ' 天。今天只練 6 句短句、6 個字，還有 '
+        + lesson.exercises.length + ' 道練習。每天自動切換今天課程，也能從上方選日期複習。';
+    }
+  }
   byId('hero-actions').replaceChildren(
     button('▶ 連續朗讀例句', () => play(lesson.sentences.map(({ en }) => en)), 'primary'),
     button('停止朗讀', stopAudio)
@@ -368,8 +379,25 @@ for (const entry of dates) {
   option.value = entry.date;
   byId('date').append(option);
 }
-const bookmarked = new URLSearchParams(location.search).get('date') || read('date');
-if (dates.some(({ date }) => date === bookmarked)) byId('date').value = bookmarked;
+// Begin with the A0 travel course, then automatically advance to each new day's lesson.
+// Explicitly chosen dates remain available for review.
+function localYmd() {
+  const now = new Date();
+  return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+}
+const dayNow = localYmd();
+const travel = window.travelCourse;
+const travelLessons = travel ? dates.filter(l => travel.dates.includes(l.date)) : [];
+const daily = travelLessons.find(l => l.date === dayNow)
+  || travelLessons.find(l => l.date <= dayNow)
+  || travelLessons[travelLessons.length - 1]
+  || dates[0];
+const explicitDate = new URLSearchParams(location.search).get('date');
+const previousDay = read('last-opened-day');
+const storedDate = read('date');
+const initialDate = explicitDate || (previousDay === dayNow && storedDate ? storedDate : daily.date);
+if (dates.some(({ date }) => date === initialDate)) byId('date').value = initialDate;
+save('last-opened-day', dayNow);
 byId('date').addEventListener('change', () => {
   const url = new URL(location.href);
   url.searchParams.set('date', byId('date').value);
