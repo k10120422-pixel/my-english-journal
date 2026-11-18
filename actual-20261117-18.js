@@ -599,9 +599,9 @@ const actual=[
         ],
         "mistakes": [
           {
-            "wrong": "There is no towel in my room. Can I have one, please?",
-            "right": "請求毛巾",
-            "why": "one 代替 a towel，避免重複。"
+            "wrong": "Can I have towel?",
+            "right": "Can I have a towel?",
+            "why": "單數可數名詞 towel 前要加 a；前面已提到 towel 時也可以說 Can I have one?"
           }
         ]
       },
