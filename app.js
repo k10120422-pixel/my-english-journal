@@ -91,9 +91,9 @@ function play(texts) {
   const advance = () => {
     if (!queue.length) return;
     const utterance = new SpeechSynthesisUtterance(queue.shift());
-    utterance.lang = 'en-US';
+    utterance.lang = 'en-GB';
     utterance.rate = Number(byId('rate').value);
-    const voice = speechSynthesis.getVoices().find((item) => item.lang.toLowerCase().startsWith('en-us'));
+    const voice = speechSynthesis.getVoices().find((item) => item.lang.toLowerCase().startsWith('en-gb'));
     if (voice) utterance.voice = voice;
     speaking = utterance;
     utterance.onend = () => {
@@ -180,7 +180,7 @@ const contractions = {
   "you'll":"you will", "he'll":"he will", "she'll":"she will", "we'll":"we will",
   "they'll":"they will", "it'll":"it will", "don't":"do not", "doesn't":"does not",
   "didn't":"did not", "can't":"cannot", "won't":"will not", "isn't":"is not",
-  "aren't":"are not", "wasn't":"was not", "weren't":"were not"
+  "aren't":"are not", "wasn't":"was not", "weren't":"were not", "where's":"where is", "what's":"what is", "time's":"time is", "i'd":"i would", "we'll":"we will"
 };
 const numbers = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 
@@ -199,7 +199,7 @@ function speakInput(input, feedback, mic) {
   stopRecognition();
   const current = new api();
   recognition = current;
-  current.lang = 'en-US';
+  current.lang = 'en-GB';
   current.interimResults = false;
   mic.disabled = true;
   feedback.textContent = '正在聆聽…';
@@ -334,6 +334,12 @@ function renderSection() {
     const summary = node('article', '', 'card');
     summary.append(list(lesson.keyRules));
     cards.append(summary);
+    if (lesson.supplemental) {
+      const extra = lesson.supplemental;
+      const supplement = node('article', '', 'card');
+      supplement.append(details('補充複習（原預排教材，非當天實際課程）', node('h3', extra.title), ...extra.sentences.map(example), ...extra.vocab.map(vocabCard), ...extra.grammar.map(grammarCard), ...extra.patterns.map(patternCard)));
+      cards.append(supplement);
+    }
     if (lesson.timeWords?.length) {
       const words = node('article', '', 'card');
       words.append(node('h3', '五個時間連接詞'), ...lesson.timeWords.map((item) =>
@@ -362,7 +368,8 @@ function selectLesson() {
     const isTravel = dayNumber > 0;
     guide.hidden = !isTravel;
     if (isTravel) {
-      guide.textContent = '✈️ 出國英文 A0／Pre-A1 ・ 第 ' + dayNumber
+      if (lesson.actual) guide.textContent = '實際口說課程 ・ ' + lesson.sentences.length + ' 個例句、' + lesson.vocab.length + ' 個重點字詞、' + lesson.exercises.length + ' 道練習。';
+      else guide.textContent = '✈️ 出國英文 A0／Pre-A1 ・ 第 ' + dayNumber
         + ' / ' + window.travelCourse.count + ' 天。今天只練 6 句短句、6 個字，還有 '
         + lesson.exercises.length + ' 道練習。每天自動切換今天課程，也能從上方選日期複習。';
     }
